@@ -3,8 +3,19 @@
 - Create React App with Vite
 - Configured Tailwind CSS
 - Header
+- Routing of App
 - Login Form
 - Sign Up Form
+- Form Validation
+- useRef Hook
+- Firebase Setup
+- Deploying our App to Production
+- Create SignUp User Account
+- Implement SignIn user API
+- Created Redux store with userSlice
+- Implemented Signout Feature
+- Update Profile
+- Fetch from TMDB movies
 
 
 #Features
@@ -21,3 +32,5 @@
 - Netflix-Gpt
     - Search Bar
     - Movie Suggestion
+
+
