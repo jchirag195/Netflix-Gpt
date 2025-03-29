@@ -3,15 +3,14 @@ import Header from './Header'
 import {checkValidData} from "../utils/Validate.jsx";
 import {createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../utils/Firebase.jsx';
-import { useNavigate } from 'react-router-dom';
 import {updateProfile } from "firebase/auth";
 import { useDispatch } from 'react-redux';
 import { addUser } from '../utils/userSlice.jsx';
+import { USER_AVATAR } from '../utils/constant.jsx';
 
 const Login = () => {
   const[isSignInForm, setIsSignInForm] = useState(true);
   const[errorMessage, setErrorMessage] = useState(null);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const name = useRef(null);
@@ -33,16 +32,14 @@ const Login = () => {
     // Signed up 
     const user = userCredential.user;
     updateProfile(user, {
-      displayName: name.current.value, photoURL: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3GOad27F2cDmlZi3g8ldnGByOXKreDwokrA&s"
+      displayName: name.current.value, photoURL: USER_AVATAR
     }).then(() => {
       const {uid, email, displayName, photoURL} = auth.currentUser;
       
               dispatch(addUser({uid: uid, email: email,displayName: displayName, photoURL: photoURL}));
-      navigate("/browse");
     }).catch((error) => {
       setErrorMessage(error.message);
     });
-    console.log(user);
   })
   .catch((error) => {
     const errorCode = error.code;
@@ -56,8 +53,6 @@ const Login = () => {
   .then((userCredential) => {
     // Signed in 
     const user = userCredential.user;
-    console.log(user);
-    navigate("/browse");
   })
   .catch((error) => {
     const errorCode = error.code;
@@ -88,7 +83,7 @@ const Login = () => {
             <input ref={email} type='text' placeholder='Email Address' className='p-4 my-4 w-full rounded-lg'/>
             <input ref={password} type='password' placeholder='Password' className='p-4 my-4 w-full rounded-lg'/>
             <p className='text-red-500 font-bold text-lg py-2'>{errorMessage}</p>
-            <button className='w-full rounded-lg p-4 my-6 bg-red-700  cursor-pointer' onClick={handleButtonClick}>
+            <button className='w-full rounded-lg p-4 my-6 bg-red-700 hover:bg-red-900  cursor-pointer' onClick={handleButtonClick}>
               {isSignInForm? "Sign In" : "Sign Up"}
               </button>
             <p className='py-4 cursor-pointer' onClick={toggleSignInForm}>

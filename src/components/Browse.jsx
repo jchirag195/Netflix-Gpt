@@ -1,12 +1,20 @@
 import React from 'react'
 import Header from './Header'
+import useNowPlayingMovies from "../hooks/useNowPlayingMovies"
+import MainContainer from "./MainContainer";
+import SecondaryContainer from "./SecondaryContainer";
 
 const Browse = () => {
-  return (
-    <div>
-      <Header />;
+
+  useNowPlayingMovies();
+  
+ return (
+    <div className='relative h-screen overflow-hidden'>
+      <Header />
+      <MainContainer />
+      <SecondaryContainer />
     </div>
   )
 }
 
-export default Browse
+export default Browse;
