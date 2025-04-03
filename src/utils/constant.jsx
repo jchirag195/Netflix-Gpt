@@ -23,3 +23,5 @@ alt="Canvas Logo"
     {identifier: "gujarati", name: "Gujarati"}]
 
    export const OpenAI_KEY = import.meta.env.VITE_APP_OpenAI_KEY;
+
+   export const Firebase_API_Key = import.meta.env.VITE_FIREBASE_API_KEY;
