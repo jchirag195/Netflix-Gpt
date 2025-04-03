@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+/* In your main CSS file */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+@layer utilities {
+    .hide-scrollbar {
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE/Edge */
+    }
+    
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none; /* Chrome/Safari/Webkit */
+    }
+  }
+
+.hide-scrollbar {
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Webkit */
+}
+
+/* Add this to your CSS for button transitions */
+.hover\:bg-black\/70:hover {
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* Optional: Fade-out effect on scroll edges */
+.scroll-container {
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 5%,
+    black 95%,
+    transparent 100%
+  );
+}
