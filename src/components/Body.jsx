@@ -1,7 +1,8 @@
-import React from 'react'
-import Login from './Login'
-import Browse from './Browse'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import React from 'react';
+import Login from './Login';
+import Browse from './Browse';
+import MoviePage from './MoviePage';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const Body = () => {
 
@@ -13,7 +14,11 @@ const Body = () => {
     {
       path: "/browse",
       element: <Browse />
-    }
+    },
+    {
+      path: "/browse/:type/:id/:listName", // 👈 Add this route
+      element: <MoviePage />,
+    },
   ]);
 
   return (
@@ -23,4 +28,4 @@ const Body = () => {
   )
 }
 
-export default Body
+export default Body;

@@ -17,7 +17,7 @@ const MovieList = ({ title, movies }) => {
     <div className="px-6 py-4 relative group">
       {/* Title + Buttons Container */}
       <div className="flex justify-between items-center">
-        <h1 className="text-white text-xl md:text-3xl py-4 font-bold">{title}</h1>
+        <h1 className="text-white text-lg md:text-3xl py-4 font-bold">{title}</h1>
         <div className="flex space-x-3">
         <button 
           onClick={() => scroll(-500)}
@@ -44,11 +44,12 @@ const MovieList = ({ title, movies }) => {
         className="flex overflow-x-auto pb-4 hide-scrollbar"
       >
         <div className="flex space-x-4">
-          {movies?.map((movie) => (
-            <div className="w-48 flex-shrink-0" key={movie.id}>
-              <MovieCard posterPath={movie.poster_path} />
-            </div>
+        {movies?.map((movie) => (
+          <div className="w-48 flex-shrink-0" key={movie.id}>
+          <MovieCard movie={movie} listName={title.toLowerCase().replace(/\s+/g, '')} />
+          </div>
           ))}
+
         </div>
       </div>
     </div>

@@ -1,69 +1,100 @@
 import React, { useEffect } from 'react';
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from '../utils/Firebase';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUser, removeUser } from '../utils/userSlice';
-import { LOGO, Supported_Languages } from '../utils/constant';
+import { LOGO, Supported_Languages, USER_AVATAR } from '../utils/constant';
 import { toggleGptSearchView } from '../utils/GptSlice';
 import { changedLanguage } from '../utils/configSlice';
+import { FaSearch, FaHome } from 'react-icons/fa';
+import GptSearchBar from './GptSearchBar';
 
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector(store => store.user);
-  const showGptSearch = useSelector((store) => store.gpt.showGptSearch)
+  const showGptSearch = useSelector((store) => store.gpt.showGptSearch);
 
   const handleSignOut = () => {
-      signOut(auth).then(() => {
-      }).catch((error) => {
-        navigate("/error");
-      });
-
-  }
+    signOut(auth).catch(() => {
+      navigate("/error");
+    });
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        const {uid, email, displayName, photoURL} = user;
-
-        dispatch(addUser({uid: uid, email: email,displayName: displayName, photoURL: photoURL}));
+        const { uid, email, displayName, photoURL } = user;
+        dispatch(addUser({ uid, email, displayName, photoURL }));
         navigate("/browse");
       } else {
         dispatch(removeUser());
         navigate("/");
       }
     });
-    //unsubscribe when component Unmounts
     return () => unsubscribe();
-
-  },[])
+  }, []);
 
   const handleGptSearchClick = () => {
-    //Toggle GPT Search Button
     dispatch(toggleGptSearchView());
-  }
+  };
 
   const handleLanguageChange = (e) => {
-    dispatch(changedLanguage(e.target.value))
-  }
+    dispatch(changedLanguage(e.target.value));
+  };
 
   return (
-    <div className='absolute w-screen px-8 py-2 bg-gradient-to-b from-black z-10 flex flex-col md:flex-row justify-between mt-2'>
-      <img className='w-44' src={LOGO} alt="logo" />
-      {user && (
-        <div className='flex p-2' >
-          {showGptSearch && 
-          <select className='p-2 m-2 bg-gray-900 text-white'
-          onChange={handleLanguageChange}>
-            {Supported_Languages.map((lang) => <option key={lang.identifier} value={lang.identifier} >{lang.name} </option>)}
-          </select>}
-          <button className='py-2 px-4 mx- my-2 bg-gray-800 text-white rounded-lg cursor-pointer'onClick={handleGptSearchClick}>{showGptSearch? "Home" : "GPT-Search"} </button>
-        <img className='h-10 w-10 m-2 rounded-lg' src={user?.photoURL} alt="user-icon" />
-        <button onClick={handleSignOut} className='font-bold text-white p-2 m-2 bg-red-500 rounded-lg cursor-pointer hover:bg-red-900'>Sign Out</button>
-      </div>)}
-    </div>
-  )
-}
+    <div className='fixed top-0 left-0 w-full px-8 py-3 bg-gradient-to-b from-black z-50 flex md:justify-center items-center gap-100'>
+      <Link to="/browse">
+      <img className='w-44 mx-auto md:mx-0' src={LOGO} alt="Netflix Logo" />
+      </Link>
+      {showGptSearch && (
+        <div className='flex-grow max-w-3xl mx-4'>
+          <GptSearchBar />
+        </div>
+      )}
 
-export default Header
+      {user && (
+        <div className='flex items-center gap-6 px-10 md:ml-auto'>
+          {showGptSearch && (
+            <select className='p-2 bg-gray-900 text-white rounded-lg' onChange={handleLanguageChange}>
+              {Supported_Languages.map((lang) => (
+                <option key={lang.identifier} value={lang.identifier}>{lang.name}</option>
+              ))}
+            </select>
+          )}
+
+          <button 
+            className='p-3 text-white rounded-full cursor-pointer transition duration-300 ease-in-out transform hover:scale-125 hover:shadow-lg hover:shadow-red-500/50'
+            onClick={handleGptSearchClick}
+          >
+            {showGptSearch ? <FaHome className="text-3xl" /> : <FaSearch className="text-3xl" />}
+          </button>
+
+          {!showGptSearch && (
+            <>
+              <div onTouchMove={<div className="hidden md:flex flex-col items-end">
+                <span className="text-sm text-gray-300">Hello,</span>
+                <span className="text-white font-medium truncate max-w-[120px]">
+                  {user?.displayName}
+                </span>
+              </div>} className="h-12 w-12 overflow-hidden hover:border-red-500 transition-colors duration-300">
+                {USER_AVATAR}
+              </div>
+
+              <button 
+                onClick={handleSignOut} 
+                className='bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors duration-300 font-medium text-sm cursor-pointer'
+              >
+                Sign Out
+              </button>
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Header;
