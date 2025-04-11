@@ -27,7 +27,13 @@ const Header = () => {
       if (user) {
         const { uid, email, displayName, photoURL } = user;
         dispatch(addUser({ uid, email, displayName, photoURL }));
-        navigate("/browse");
+
+        // ✅ Prevent redirect if already on a sub-route
+        const currentPath = window.location.pathname;
+        if (currentPath === "/" || currentPath === "/login") {
+          navigate("/browse");
+        }
+
       } else {
         dispatch(removeUser());
         navigate("/");
@@ -46,8 +52,8 @@ const Header = () => {
 
   return (
     <div className='fixed top-0 left-0 w-full px-8 py-3 bg-gradient-to-b from-black z-50 flex md:justify-center items-center gap-100'>
-      <Link to="/browse">
-      <img className='w-44 mx-auto md:mx-0' src={LOGO} alt="Netflix Logo" />
+      <Link to={user ? "/browse" : "/"}>
+        <img className='w-44 mx-auto md:mx-0' src={LOGO} alt="Netflix Logo" />
       </Link>
       {showGptSearch && (
         <div className='flex-grow max-w-3xl mx-4'>
@@ -74,13 +80,14 @@ const Header = () => {
 
           {!showGptSearch && (
             <>
-              <div onTouchMove={<div className="hidden md:flex flex-col items-end">
-                <span className="text-sm text-gray-300">Hello,</span>
-                <span className="text-white font-medium truncate max-w-[120px]">
-                  {user?.displayName}
-                </span>
-              </div>} className="h-12 w-12 overflow-hidden hover:border-red-500 transition-colors duration-300">
+              <div className="relative group h-12 w-12 overflow-hidden hover:border-red-500 transition-colors duration-300 border-2 border-transparent">
                 {USER_AVATAR}
+                <div className="hidden group-hover:flex absolute top-full mt-2 right-0 bg-[#141414] p-2 shadow-lg flex-col items-end z-10">
+                  <span className="text-sm text-gray-300">Hello,</span>
+                  <span className="text-white font-medium truncate max-w-[120px]">
+                    {user?.displayName}
+                  </span>
+                </div>
               </div>
 
               <button 

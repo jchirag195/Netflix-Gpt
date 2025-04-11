@@ -30,7 +30,7 @@ const useGetTrailer = (movieId, mediaType) => {
     };
 
     getVideo();
-  }, [movieId]);
+  }, [movieId, mediaType]);
 
   return { videoUrl }; // ✅ Always return an object
 };

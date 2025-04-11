@@ -38,7 +38,7 @@ const GptMovieSuggestions = () => {
         <div className="flex overflow-x-auto space-x-6 hide-scrollbar">
           {finalMovies.map((movie, index) => (
             <div key={index} className="w-48 flex-shrink-0">
-               <MovieCard movie={movie} listName="gpt" />
+               <MovieCard movie={movie} list_name="gpt" />
               <p className="text-white mt-2 text-center">{movie.name}</p>
             </div>
           ))}
