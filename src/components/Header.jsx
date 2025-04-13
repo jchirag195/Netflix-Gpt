@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from '../utils/Firebase';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUser, removeUser } from '../utils/userSlice';
 import { LOGO, Supported_Languages, USER_AVATAR } from '../utils/constant';
@@ -15,6 +15,7 @@ const Header = () => {
   const navigate = useNavigate();
   const user = useSelector(store => store.user);
   const showGptSearch = useSelector((store) => store.gpt.showGptSearch);
+  const location = useLocation();  // Get the current route location
 
   const handleSignOut = () => {
     signOut(auth).catch(() => {
@@ -28,12 +29,10 @@ const Header = () => {
         const { uid, email, displayName, photoURL } = user;
         dispatch(addUser({ uid, email, displayName, photoURL }));
 
-        // ✅ Prevent redirect if already on a sub-route
         const currentPath = window.location.pathname;
         if (currentPath === "/" || currentPath === "/login") {
           navigate("/browse");
         }
-
       } else {
         dispatch(removeUser());
         navigate("/");
@@ -50,20 +49,25 @@ const Header = () => {
     dispatch(changedLanguage(e.target.value));
   };
 
+  // Check if we're on the MoviePage by comparing the path
+  const isMoviePage = location.pathname.includes('/movie/');
+
   return (
-    <div className='fixed top-0 left-0 w-full px-8 py-3 bg-gradient-to-b from-black z-50 flex md:justify-center items-center gap-100'>
+    <div className='fixed top-0 left-0 w-full px-8 py-3 pr-0 bg-gradient-to-b from-black z-50 flex md:justify-center items-center gap-100'>
       <Link to={user ? "/browse" : "/"}>
         <img className='w-44 mx-auto md:mx-0' src={LOGO} alt="Netflix Logo" />
       </Link>
-      {showGptSearch && (
+
+      {/* Only show GPT search bar if not on the movie page */}
+      {!isMoviePage && showGptSearch && (
         <div className='flex-grow max-w-3xl mx-4'>
           <GptSearchBar />
         </div>
       )}
 
-      {user && (
+      {user && !isMoviePage && (
         <div className='flex items-center gap-6 px-10 md:ml-auto'>
-          {showGptSearch && (
+          {showGptSearch && !isMoviePage && (
             <select className='p-2 bg-gray-900 text-white rounded-lg' onChange={handleLanguageChange}>
               {Supported_Languages.map((lang) => (
                 <option key={lang.identifier} value={lang.identifier}>{lang.name}</option>
@@ -78,7 +82,7 @@ const Header = () => {
             {showGptSearch ? <FaHome className="text-3xl" /> : <FaSearch className="text-3xl" />}
           </button>
 
-          {!showGptSearch && (
+          {!showGptSearch && !isMoviePage && (
             <>
               <div className="relative group h-12 w-12 overflow-hidden hover:border-red-500 transition-colors duration-300 border-2 border-transparent">
                 {USER_AVATAR}
@@ -98,6 +102,19 @@ const Header = () => {
               </button>
             </>
           )}
+        </div>
+      )}
+
+      {/* Only show Home button on the MoviePage */}
+      {isMoviePage && (
+        <div className='flex items-center mr-10 gap-6 md:ml-auto'>
+          <Link to="/browse">
+            <button 
+              className='p-3 text-white rounded-full cursor-pointer transition duration-300 ease-in-out transform hover:scale-125 hover:shadow-lg hover:shadow-red-500/50'
+            >
+              <FaHome className="text-3xl" />
+            </button>
+          </Link>
         </div>
       )}
     </div>

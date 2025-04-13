@@ -5,7 +5,7 @@ import useGetTrailer from '../hooks/useGetTrailer';
 import ShimmerUI from './ShimmerUI';
 import { useSelector } from 'react-redux';
 import Footer from './Footer';
-import {LOGO} from '../utils/constant' 
+import Header from './Header';
 
 const MoviePage = () => {
   const { id, type, listName } = useParams();
@@ -63,41 +63,30 @@ const MoviePage = () => {
   return (
     <div className="relative text-white bg-[#1f1f1f] min-h-screen flex flex-col">
       <main className="flex-grow">
-        <img className='w-44 mx-auto md:mx-0 cursor-pointer'src={LOGO} alt="Netflix Logo" />
-        {/* 🎬 Background Video or Poster Image */}
-        <div className="relative w-full h-[42.85vw] overflow-hidden bg-[#1f1f1f]">
-          {/* 🔙 Top Right Button */}
-          <button
-            onClick={() => navigate('/')}
-            className="absolute top-4 right-4 z-20 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm sm:text-base rounded-md shadow-lg transition font-semibold cursor-pointer"
-          >
-            ⬅ Back to Home
-          </button>
-
-          {videoUrl ? (
-            <>
-              {/* 🎥 YouTube Trailer Embed */}
+        <Header isMoviePage={true} /> {/* Pass isMoviePage as true */}
+        {/* 🎬 Video or Backdrop Banner */}
+        <div className="relative w-full bg-[#1f1f1f] py-8 px-4 sm:px-8 md:px-16">
+          <div className="max-w-7xl mt-20 mx-auto rounded-xl overflow-hidden shadow-2xl border-2 border-gray-800 bg-black aspect-video">
+            {videoUrl ? (
               <iframe
-              className="absolute top-0 left-0 w-full h-full object-cover mt-20 bg-gradient-to-t from-[#1f1f1f] via-[#1f1f1f]/50 to-transparent"
-              src={`${videoUrl}&autoplay=1&mute=1&loop=1&controls=1&autoplay=1`}
-              title="Movie Trailer"
-              frameBorder="0"
-              allow="autoplay; fullscreen; encrypted-media"
-              allowFullScreen
-            />
-
-              <div className="absolute inset-0 bg-gradient-to-t from-[#1f1f1f] via-[#1f1f1f]/50 to-transparent" />
-            </>
-          ) : (
-            <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{
-                backgroundImage: `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`,
-              }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-t from-[#1f1f1f] via-[#1f1f1f]/50 to-transparent" />
-            </div>
-          )}
+                className="w-full h-full"
+                src={`${videoUrl}?autoplay=1&mute=1&loop=1&controls=1`}
+                title="Movie Trailer"
+                frameBorder="0"
+                allow="autoplay; fullscreen; encrypted-media"
+                allowFullScreen
+              />
+            ) : (
+              <div
+                className="w-full h-full bg-cover bg-center"
+                style={{
+                  backgroundImage: `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`,
+                }}
+              >
+                <div className="w-full h-full bg-gradient-to-t from-[#1f1f1f] via-[#1f1f1f]/50 to-transparent" />
+              </div>
+            )}
+          </div>
         </div>
 
         {/* 🎥 Movie Details */}

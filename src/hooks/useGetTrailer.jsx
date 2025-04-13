@@ -1,38 +1,46 @@
-import { useEffect, useState } from 'react';
-import { API_OPTIONS } from '../utils/constant';
+import { useEffect, useState } from "react";
+import { API_OPTIONS } from "../utils/constant";
 
-const useGetTrailer = (movieId, mediaType) => {
-  const [videoUrl, setVideoUrl] = useState('');
+const useGetTrailer = (movieId, type = "movie") => {
+  const [videoUrl, setVideoUrl] = useState(null);
 
   useEffect(() => {
-    if (!movieId) return;
+    if (!movieId || !type) return;
 
-    const getVideo = async () => {
+    const fetchVideo = async () => {
       try {
         const response = await fetch(
-          `https://api.themoviedb.org/3/${mediaType}/${movieId}/videos?language=en-US&modestbranding=1`,
+          `https://api.themoviedb.org/3/${type}/${movieId}/videos`,
           API_OPTIONS
         );
+
         const data = await response.json();
-        if (!data.results || data.results.length === 0) {
-          return;
+
+        const trailer = data.results?.find(
+          (vid) =>
+            vid.type === "Trailer" &&
+            vid.site === "YouTube" &&
+            vid.official
+        ) || data.results?.find(
+          (vid) => vid.site === "YouTube"
+        );
+
+        if (trailer) {
+          // 🔄 Convert to embeddable format
+          setVideoUrl(`https://www.youtube.com/embed/${trailer.key}`);
+        } else {
+          setVideoUrl(null);
         }
-
-        // Get first trailer or first available video
-        const trailer =
-          data.results.find((vid) => vid.type === 'Trailer') || data.results[0];
-        const url = `https://www.youtube.com/embed/${trailer.key}?autoplay=1&loop=1&playlist=${trailer.key}`;
-
-        setVideoUrl(url);
-      } catch (error) {
-        console.error('Error fetching video:', error);
+      } catch (err) {
+        console.error("Failed to fetch trailer:", err);
+        setVideoUrl(null);
       }
     };
 
-    getVideo();
-  }, [movieId, mediaType]);
+    fetchVideo();
+  }, [movieId, type]);
 
-  return { videoUrl }; // ✅ Always return an object
+  return { videoUrl };
 };
 
 export default useGetTrailer;
