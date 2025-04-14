@@ -6,7 +6,7 @@ const GptSlice = createSlice({
     showGptSearch: false,
     movieResults: null,
     movieNames: null,
-    liveSearchResults: [], // ✅ Added for live search functionality
+    liveSearchResults: [],
   },
   reducers: {
     toggleGptSearchView: (state) => {
@@ -14,8 +14,24 @@ const GptSlice = createSlice({
     },
     addGptMovieResult: (state, action) => {
       const { movieNames, movieResults } = action.payload;
+
+      // Flatten and deduplicate movies by title
+      const flatResults = movieResults.flat();
+      const uniqueMoviesMap = new Map();
+      for (const movie of flatResults) {
+        if (!uniqueMoviesMap.has(movie.title)) {
+          uniqueMoviesMap.set(movie.title, movie);
+        }
+      }
+
+      // Get the unique movies and pad array to 5 if needed
+      const uniqueMovies = Array.from(uniqueMoviesMap.values());
+      while (uniqueMovies.length < 5) {
+        uniqueMovies.push(null); // to maintain spacing in UI
+      }
+
       state.movieNames = movieNames;
-      state.movieResults = movieResults;
+      state.movieResults = [uniqueMovies];
     },
     setLiveSearchResults: (state, action) => {
       state.liveSearchResults = action.payload;
