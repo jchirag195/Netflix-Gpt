@@ -60,19 +60,28 @@ const Header = () => {
 
       {/* Only show GPT search bar if not on the movie page */}
       {!isMoviePage && showGptSearch && (
-        <div className='flex-grow max-w-3xl mx-4'>
-          <GptSearchBar />
-        </div>
+      <div className='flex-grow max-w-3xl mx-4'>
+      <GptSearchBar />
+      </div>
       )}
 
       {user && !isMoviePage && (
         <div className='flex items-center gap-6 px-10 md:ml-auto'>
           {showGptSearch && !isMoviePage && (
-            <select className='p-2 bg-gray-900 text-white rounded-lg' onChange={handleLanguageChange}>
-              {Supported_Languages.map((lang) => (
-                <option key={lang.identifier} value={lang.identifier}>{lang.name}</option>
-              ))}
-            </select>
+            <select 
+            className='px-3 py-1 bg-transparent text-white border border-gray-500 rounded-sm text-sm hover:border-white transition-colors duration-300'
+            onChange={handleLanguageChange}
+          >
+            {Supported_Languages.map((lang) => (
+              <option 
+                key={lang.identifier} 
+                value={lang.identifier}
+                className="bg-gray-900"
+              >
+                {lang.name}
+              </option>
+            ))}
+          </select>
           )}
 
           <button 

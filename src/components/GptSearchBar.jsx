@@ -97,7 +97,7 @@ const GptSearchBar = () => {
   }, [query, isGptSearchActive, debouncedLiveSearch]);
 
   return (
-    <div className="flex justify-center mt-6 px-4 sm:px-8">
+    <div className="flex flex-col sm:flex-row gap-4 w-full max-w-4xl items-center">
       <div className="flex flex-col sm:flex-row gap-4 w-full items-center">
         {/* Search Form */}
         <form
