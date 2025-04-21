@@ -15,15 +15,17 @@ const GptSearchBar = () => {
   const [isGptSearchActive, setIsGptSearchActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Fetching movies from TMDB (Ensure to get 5 results)
   const searchMovieTMDB = async (movie) => {
     const response = await fetch(
       `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(movie)}&include_adult=false&language=en-US&page=1`,
       API_OPTIONS
     );
     const json = await response.json();
-    return json.results;
+    return json.results.slice(0, 5); // Ensure to get 5 results
   };
 
+  // Handling GPT Search
   const handleGPTSearch = async () => {
     const inputQuery = searchText.current?.value;
     if (!inputQuery) return;
@@ -42,7 +44,7 @@ const GptSearchBar = () => {
         headers: { Authorization: `Bearer ${OpenAI_KEY}` },
       });
 
-      const raw = openaiResults?.choices?.[0,1,2,3,4]?.message?.content || '';
+      const raw = openaiResults?.choices?.[0]?.message?.content || '';
       const movieArray = raw
         .replace(/\*\*/g, '')
         .replace(/^\d+\.\s*/gm, '')
@@ -51,13 +53,15 @@ const GptSearchBar = () => {
         .filter(Boolean)
         .slice(0, 5);
 
+      // Fetch 5 results for each movie name
       const movieResults = await Promise.all(
         movieArray.map(async (movie) => {
           const results = await searchMovieTMDB(movie);
-          return results?.[0] ? [results[0,1,2,3,4]] : [];
+          return results.slice(0, 5); // Fetch 5 results for each movie
         })
       );
 
+      // Dispatching movie results to Redux (as an array of 5 results per movie)
       dispatch(addGptMovieResult({ movieNames: movieArray, movieResults }));
     } catch (error) {
       console.error('GPT Search Error:', error);
@@ -66,6 +70,7 @@ const GptSearchBar = () => {
     }
   };
 
+  // Handling Manual Search
   const handleManualSearch = async (e) => {
     e.preventDefault();
     if (isGptSearchActive) return;
@@ -75,9 +80,10 @@ const GptSearchBar = () => {
 
     dispatch(clearGptResults());
     const results = await searchMovieTMDB(inputQuery);
-    dispatch(addGptMovieResult({ movieNames: [inputQuery], movieResults: [results.slice(0, 1)] }));
+    dispatch(addGptMovieResult({ movieNames: [inputQuery], movieResults: [results.slice(0, 5)] })); // Ensure 5 results
   };
 
+  // Debounced Live Search
   const debouncedLiveSearch = useRef(
     _.debounce(async (text) => {
       if (!text || isGptSearchActive) {
@@ -86,10 +92,11 @@ const GptSearchBar = () => {
       }
 
       const results = await searchMovieTMDB(text);
-      dispatch(addGptMovieResult({ movieNames: [text], movieResults: [results.slice(0, 1)] }));
+      dispatch(addGptMovieResult({ movieNames: [text], movieResults: [results.slice(0, 5)] })); // Ensure 5 results
     }, 500)
   ).current;
 
+  // Effect hook to trigger live search
   useEffect(() => {
     if (!isGptSearchActive) {
       debouncedLiveSearch(query);

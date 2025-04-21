@@ -13,7 +13,7 @@ const MainContainer = () => {
   return (
     <div className="min-h-screen relative">
       <VideoBackground movieId={id} />
-      <VideoTitle title={original_title} overview={overview} />
+      <VideoTitle title={original_title} overview={overview} movie={mainMovie} />
     </div>
   );
 };

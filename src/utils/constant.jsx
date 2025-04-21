@@ -9,7 +9,7 @@ export const USER_AVATAR = (
     className="h-full w-full object-cover border-2 border-white"
     onError={(e) => {
       e.target.onerror = null;
-      e.target.src = 'https://cdn-icons-png.flaticon.com/512/1144/1144760.png';
+      e.target.src = 'https://wallpapers.com/images/hd/netflix-profile-pictures-1000-x-1000-qo9h82134t9nv0j0.jpg';
     }}
   />
 );
