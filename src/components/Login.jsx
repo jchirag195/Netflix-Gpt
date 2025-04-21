@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import Header from './Header';
-import { checkValidData } from "../utils/Validate.jsx";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from '../utils/Firebase.jsx';
 import { useDispatch } from 'react-redux';
