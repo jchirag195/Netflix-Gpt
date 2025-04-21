@@ -2,7 +2,7 @@ import useGetTrailer from '../hooks/useGetTrailer';
 
 const VideoTitle = ({ title, overview }) => {
   const handleButtonClick = () => {
-    useGetTrailer;
+    useGetTrailer
   }
   return (
     <div className="w-screen aspect-video pt-[20%] px-6 md:px-24 absolute text-white bg-gradient-to-r from-black/90">

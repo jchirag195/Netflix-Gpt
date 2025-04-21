@@ -42,7 +42,7 @@ const GptSearchBar = () => {
         headers: { Authorization: `Bearer ${OpenAI_KEY}` },
       });
 
-      const raw = openaiResults?.choices?.[0]?.message?.content || '';
+      const raw = openaiResults?.choices?.[0,1,2,3,4]?.message?.content || '';
       const movieArray = raw
         .replace(/\*\*/g, '')
         .replace(/^\d+\.\s*/gm, '')
@@ -54,7 +54,7 @@ const GptSearchBar = () => {
       const movieResults = await Promise.all(
         movieArray.map(async (movie) => {
           const results = await searchMovieTMDB(movie);
-          return results?.[0] ? [results[0]] : [];
+          return results?.[0] ? [results[0,1,2,3,4]] : [];
         })
       );
 
