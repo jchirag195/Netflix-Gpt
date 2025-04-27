@@ -1,31 +1,29 @@
 import React, { useEffect, useRef, useState } from 'react';
-import lang from '../utils/languageConstants';
 import { useDispatch, useSelector } from 'react-redux';
+import _ from 'lodash';
 import openai from '../utils/openAI';
 import { API_OPTIONS, OpenAI_KEY } from '../utils/constant';
 import { addGptMovieResult, clearGptResults } from '../utils/GptSlice';
-import { FaRobot } from 'react-icons/fa';
-import _ from 'lodash';
+import { FaRobot, FaStar } from 'react-icons/fa';
 
 const GptSearchBar = () => {
   const dispatch = useDispatch();
   const langKey = useSelector((store) => store.config.lang);
   const searchText = useRef(null);
+
   const [query, setQuery] = useState('');
   const [isGptSearchActive, setIsGptSearchActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Fetching movies from TMDB (Ensure to get 5 results)
   const searchMovieTMDB = async (movie) => {
     const response = await fetch(
       `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(movie)}&include_adult=false&language=en-US&page=1`,
       API_OPTIONS
     );
     const json = await response.json();
-    return json.results.slice(0, 5); // Ensure to get 5 results
+    return json.results.slice(0, 5);
   };
 
-  // Handling GPT Search
   const handleGPTSearch = async () => {
     const inputQuery = searchText.current?.value;
     if (!inputQuery) return;
@@ -33,9 +31,7 @@ const GptSearchBar = () => {
     dispatch(clearGptResults());
     setIsLoading(true);
 
-    const gptQuery = `You are a movie recommendation system. 
-    Provide exactly 5 movie names for the query: "${inputQuery}". 
-    Return them in a single line, comma-separated, no extra text.`;
+    const gptQuery = `You are a movie recommendation system. Provide exactly 5 movie names for: "${inputQuery}". Return them comma-separated.`;
 
     try {
       const openaiResults = await openai.chat.completions.create({
@@ -53,15 +49,13 @@ const GptSearchBar = () => {
         .filter(Boolean)
         .slice(0, 5);
 
-      // Fetch 5 results for each movie name
       const movieResults = await Promise.all(
         movieArray.map(async (movie) => {
           const results = await searchMovieTMDB(movie);
-          return results.slice(0, 5); // Fetch 5 results for each movie
+          return results.slice(0, 5);
         })
       );
 
-      // Dispatching movie results to Redux (as an array of 5 results per movie)
       dispatch(addGptMovieResult({ movieNames: movieArray, movieResults }));
     } catch (error) {
       console.error('GPT Search Error:', error);
@@ -70,7 +64,6 @@ const GptSearchBar = () => {
     }
   };
 
-  // Handling Manual Search
   const handleManualSearch = async (e) => {
     e.preventDefault();
     if (isGptSearchActive) return;
@@ -80,10 +73,9 @@ const GptSearchBar = () => {
 
     dispatch(clearGptResults());
     const results = await searchMovieTMDB(inputQuery);
-    dispatch(addGptMovieResult({ movieNames: [inputQuery], movieResults: [results.slice(0, 5)] })); // Ensure 5 results
+    dispatch(addGptMovieResult({ movieNames: [inputQuery], movieResults: [results.slice(0, 5)] }));
   };
 
-  // Debounced Live Search
   const debouncedLiveSearch = useRef(
     _.debounce(async (text) => {
       if (!text || isGptSearchActive) {
@@ -92,78 +84,77 @@ const GptSearchBar = () => {
       }
 
       const results = await searchMovieTMDB(text);
-      dispatch(addGptMovieResult({ movieNames: [text], movieResults: [results.slice(0, 5)] })); // Ensure 5 results
+      dispatch(addGptMovieResult({ movieNames: [text], movieResults: [results.slice(0, 5)] }));
     }, 500)
   ).current;
 
-  // Effect hook to trigger live search
   useEffect(() => {
     if (!isGptSearchActive) {
       debouncedLiveSearch(query);
     }
   }, [query, isGptSearchActive, debouncedLiveSearch]);
 
-  return (
-    <div className="flex flex-col sm:flex-row gap-4 w-full max-w-4xl items-center">
-      <div className="flex flex-col sm:flex-row gap-4 w-full items-center">
-        {/* Search Form */}
-        <form
-          onSubmit={handleManualSearch}
-          className="flex w-full bg-gray-800 rounded-lg overflow-hidden shadow-md border-2 border-black"
-        >
-          <input
-            ref={searchText}
-            type="text"
-            className="flex-grow p-3 text-white text-xl rounded-l-lg border-3 border-gray-700 focus:border-red-800 focus:ring-2 focus:ring-red-500 focus:outline-none shadow-lg transition-all duration-300 hover:bg-opacity-90"
-            placeholder={lang[langKey].gptSearchPlaceholder}
-            aria-label="Search movies"
-            onChange={(e) => {
-              setQuery(e.target.value);
-            }}
-            value={query}
-          />
-          {!isGptSearchActive ? (
-            <button
-              type="submit"
-              className="bg-red-700 text-white px-6 hover:bg-red-800 transition-all rounded-r-lg cursor-pointer"
-              aria-label="Manual Search"
-            >
-              {lang[langKey].search}
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={handleGPTSearch}
-              className="bg-green-700 text-white px-6 hover:bg-green-800 transition-all rounded-r-lg cursor-pointer"
-              aria-label="GPT Search"
-            >
-              {isLoading ? 'Loading...' : 'AI Search'}
-            </button>
-          )}
-        </form>
+  const toggleGptMode = () => {
+    setIsGptSearchActive((prev) => !prev);
+    dispatch(clearGptResults());
+    setQuery('');
+    if (searchText.current) searchText.current.value = '';
+  };
 
-        {/* Toggle GPT Search Button */}
-        {!isGptSearchActive ? (
+  return (
+    <div className="w-full px-4 sm:px-6 lg:px-8 flex justify-center">
+      <form
+        onSubmit={handleManualSearch}
+        className="flex flex-col sm:flex-row gap-2 sm:gap-0 w-full max-w-xl bg-gray-800 rounded-lg shadow-md border border-gray-700"
+      >
+        <input
+          ref={searchText}
+          type="text"
+          className="flex-grow min-w-0 p-2 sm:p-3 text-white text-sm sm:text-base lg:text-lg bg-gray-900 border-none focus:outline-none focus:ring-2 focus:ring-red-500 rounded-l-lg"
+          placeholder="Search movies here..."
+          onChange={(e) => setQuery(e.target.value)}
+          value={query}
+        />
+        {isGptSearchActive ? (
           <button
             type="button"
-            onClick={() => setIsGptSearchActive(true)}
-            className="relative flex items-center bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-all font-semibold text-lg shadow-md border-2 border-blue-700 cursor-pointer"
-            aria-label="Ask AI"
+            onClick={handleGPTSearch}
+            className="bg-green-700 text-white px-6 hover:bg-green-800 transition-all rounded-r-lg cursor-pointer"
           >
-            <span className="text-xs text-gray-300 font-medium">Ask AI</span>
+            {isLoading ? 'Loading...' : 'AI Search'}
           </button>
         ) : (
           <button
-            type="button"
-            onClick={() => setIsGptSearchActive(false)}
-            className="relative flex items-center bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-all font-semibold text-lg shadow-md border-2 border-blue-700 cursor-pointer"
-            aria-label="GPT Mode On"
+            type="submit"
+            className="bg-red-700 text-white px-6 hover:bg-red-800 transition-all rounded-r-lg cursor-pointer"
           >
-            <FaRobot className="text-xl sm:text-2xl text-white animate-bounce" />
-            <span className="absolute -top-1 -right-1 w-2 h-2 sm:w-3 sm:h-3 bg-green-400 rounded-full animate-ping"></span>
+            Search
           </button>
         )}
-      </div>
+      </form>
+
+      {/* Toggle buttons */}
+      {!isGptSearchActive ? (
+        <button
+          onClick={toggleGptMode}
+          className="flex items-center ml-2 px-3 py-2 bg-black/30 backdrop-blur-md rounded-xl shadow-md hover:scale-105 transition-transform"
+          aria-label="Ask AI"
+        >
+          <FaStar className="text-yellow-400 focus-ring text-xl sm:text-2xl md:text-3xl p-2 bg-gray-800 rounded-full shadow-md hover:scale-105 transition-transform sm:text-4xl animate-pulse" />
+          <span className="text-xs sm:text-sm md:text-base text-gray-200 font-medium">Ask AI</span>
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={toggleGptMode}
+          className="flex flex-col items-center px-3 py-2 bg-black/30 backdrop-blur-md rounded-xl shadow-md hover:scale-105 transition-transform"
+        >
+          <div className="relative flex items-center justify-center">
+            <FaRobot className="text-green-400 text-xl sm:text-2xl md:text-3xl animate-bounce" />
+            <div className="absolute top-0 right-0 w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
+          </div>
+        </button>
+      )}
     </div>
   );
 };

@@ -43,9 +43,9 @@ const MovieList = ({ title, movies }) => {
         ref={scrollContainer}
         className="flex overflow-x-auto pb-4 hide-scrollbar"
       >
-        <div className="flex space-x-4">
+        <div className="flex space-x-4 sm:pl-2">
         {movies?.map((movie) => (
-          <div className="w-48 flex-shrink-0" key={movie.id}>
+          <div className="flex flex-wrap justify-start gap-2 sm:gap-3 md:gap-4" key={movie.id}>
           <MovieCard movie={movie} listName={title.toLowerCase().replace(/\s+/g, '')} />
           </div>
           ))}

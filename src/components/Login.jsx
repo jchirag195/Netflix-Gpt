@@ -64,12 +64,13 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className='relative h-screen'>
       <Header />
-      <div className='absolute'>
-        <img src={BG_URL} alt="Background" />
+      <div className='absolute top-0 left-0 w-full h-full -z-10'>
+        <img src={BG_URL} alt="Background" className='w-full h-full object-cover'/>
       </div>
-      <form onSubmit={(e) => e.preventDefault()} className='w-3/12 absolute p-12 bg-black/80 my-36 mx-auto right-0 left-0 text-white rounded-lg'>
+      <div className='flex items-center justify-center min-h-screen'>
+      <form onSubmit={(e) => e.preventDefault()} className='w-[95%] sm:w-10/12 md:w-8/12 lg:w-3/12 xl:w-3/12 absolute p-6 bg-black/80 my-8 mx-auto text-white rounded-lg top-1/2 transform -translate-y-1/2'>
         <h1 className='font-bold text-3xl py-4'>
           {isSignInForm ? "Sign In" : "Sign Up"}
         </h1>
@@ -100,6 +101,7 @@ const Login = () => {
         {isSignInForm ? "New to Netflix? Sign Up Now" : "Already a User? Sign In Now"}
       </p>
       </form>
+      </div>
     </div>
   );
 };
