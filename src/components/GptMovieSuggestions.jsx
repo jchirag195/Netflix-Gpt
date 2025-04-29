@@ -38,6 +38,14 @@ const GptMovieSuggestions = () => {
     displayMovies = topMovies?.slice(0, maxCards) || [];
   }
 
+  if (displayMovies.length === 0) {
+    return (
+      <div className="p-4 md:p-8 flex justify-center">
+        <ShimmerUI /> 
+      </div>
+    );
+  }
+
   const placeholders = Array(maxCards - displayMovies.length).fill(null);
 
   return (
@@ -80,6 +88,7 @@ const GptMovieSuggestions = () => {
                 bg-gray-800 rounded-xl opacity-20 border border-gray-700"
             />
           ))}
+          
         </div>
       </div>
     </div>
