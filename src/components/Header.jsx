@@ -4,7 +4,7 @@ import { auth } from '../utils/Firebase';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUser, removeUser } from '../utils/userSlice';
-import { LOGO, Supported_Languages, USER_AVATAR } from '../utils/constant';
+import { LOGO, Supported_Languages, USER_AVATAR, LOGO_SMALL } from '../utils/constant';
 import { toggleGptSearchView } from '../utils/GptSlice';
 import { changedLanguage } from '../utils/configSlice';
 import { FaSearch, FaCaretDown } from 'react-icons/fa';
@@ -67,9 +67,23 @@ const Header = () => {
 
   return (
     <div className='fixed top-0 left-0 w-full h-[80px] bg-gradient-to-b from-black z-50 px-4 flex items-center justify-between'>
-      <div className='flex items-center gap-2'>
+      <div className='flex items-center gap-2 sm:gap-3'>
         <Link to={user ? "/browse" : "/"}>
-          <img className='w-36 sm:w-40 md:w-40 lg:w-36 xl:w-40' src={LOGO} alt="Netflix Logo" />
+        <>
+  {/* Small & Medium screens */}
+  <img
+    src={LOGO_SMALL}
+    alt="Netflix Logo Small"
+    className='w-4 sm:w-6 md:w-6 lg:hidden object-contain'
+  />
+  
+  {/* Large and above */}
+  <img
+    src={LOGO}
+    alt="Netflix Logo Large"
+    className='hidden lg:block w-36 xl:w-40'
+  />
+</>
         </Link>
       </div>
 

@@ -27,7 +27,7 @@ const Browse = () => {
         </>
       }
        <Outlet /> 
-      <Footer />
+       {!showGptSearch && <Footer />}
     </div>
   )
 }

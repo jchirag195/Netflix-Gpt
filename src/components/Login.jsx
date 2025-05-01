@@ -6,10 +6,12 @@ import { auth } from '../utils/Firebase.jsx';
 import { useDispatch } from 'react-redux';
 import { addUser } from '../utils/userSlice.jsx';
 import { BG_URL } from '../utils/constant.jsx';
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
 
   const name = useRef(null);
@@ -80,8 +82,20 @@ const Login = () => {
         )}
 
         <input ref={email} type='text' placeholder='Email Address' className='p-4 my-4 w-full rounded-lg' />
-        <input ref={password} type='password' placeholder='Password' className='p-4 my-4 w-full rounded-lg' />
-
+        <div className="relative my-4">
+    <input 
+      ref={password} 
+      type={showPassword ? 'text' : 'password'} 
+      placeholder='Password' 
+      className='p-4 w-full rounded-lg pr-12'  // Added pr-12 for padding on right
+    />
+    <span
+      onClick={() => setShowPassword(!showPassword)}
+      className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-400"
+    >
+      {showPassword ? <FaEyeSlash /> : <FaEye />}
+    </span>
+  </div>
         <p className='text-red-500 font-bold text-lg py-2'>{errorMessage}</p>
 
         <button

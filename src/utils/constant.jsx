@@ -24,3 +24,5 @@ export const API_OPTIONS = {
    export const OpenAI_KEY = import.meta.env.VITE_APP_OpenAI_KEY;
 
    export const Firebase_API_Key = import.meta.env.VITE_FIREBASE_API_KEY;
+
+   export const LOGO_SMALL = "https://images.ctfassets.net/y2ske730sjqp/4aEQ1zAUZF5pLSDtfviWjb/ba04f8d5bd01428f6e3803cc6effaf30/Netflix_N.png";
