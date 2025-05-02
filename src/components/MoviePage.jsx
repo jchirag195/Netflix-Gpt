@@ -66,7 +66,7 @@ const MoviePage = () => {
         <Header isMoviePage={true} /> {/* Pass isMoviePage as true */}
         {/* 🎬 Video or Backdrop Banner */}
         <div className="relative w-full bg-[#1f1f1f] py-8 px-4 sm:px-8 md:px-16">
-          <div className="max-w-7xl mt-20 mx-auto rounded-xl overflow-hidden shadow-2xl border-2 border-gray-800 bg-black aspect-video">
+          <div className="max-w-5xl mt-20 mx-auto rounded-xl overflow-hidden shadow-2xl border-2 border-gray-800 bg-black aspect-video">
             {videoUrl ? (
               <iframe
                 className="w-full h-full"
