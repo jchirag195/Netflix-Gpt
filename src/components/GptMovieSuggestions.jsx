@@ -50,7 +50,7 @@ const GptMovieSuggestions = () => {
 
   return (
     <div className="p-4 md:p-8 flex justify-center">
-      <div className="rounded-2xl p-5 mt-20 bg-black/40 backdrop-blur-sm shadow-xl border border-white/10 w-full max-w-[1200px]">
+      <div className="rounded-2xl p-5 mt-20 sm:justify-center bg-black/40 backdrop-blur-sm shadow-xl border border-white/10 w-full max-w-[1200px]">
         <h2 className="text-2xl md:text-3xl font-bold text-white mb-6 text-center">
           {movieNames?.length
             ? 'GPTflix Presents: Your Must-See Picks'
@@ -58,14 +58,14 @@ const GptMovieSuggestions = () => {
             ? 'Search Results'
             : 'Top Movies'}
         </h2>
-
+            
         <div className="
           grid 
     grid-cols-2 
     sm:grid-cols-2 
     md:grid-cols-2 
     lg:grid-cols-5 
-    gap-x-4 gap-y-6 
+    gap-x-4 gap-y-6
     justify-items-center
     sm:justify-center
         ">

@@ -87,13 +87,12 @@ Follow these steps to set up and run GPTFLIX locally:
 ```bash
 git clone https://github.com/jchirag195/Netflix-Gpt
 
-Navigate to the Project Directory:
-bash
-Copy
-Edit
+### Navigate to the Project Directory:
+
 cd GPTFLIX
 
-Install Dependencies:
+
+### Install Dependencies:
 Using npm:
 
 bash
@@ -107,23 +106,18 @@ Copy
 Edit
 yarn install
 
-Set Up Environment Variables:
+### Set Up Environment Variables:
 Create a .env file in the root directory and add the following variables:
 
-env
-Copy
-Edit
 VITE_QWEN_KEY=your_qwen_api_key
 VITE_TMDB_KEY=your_tmdb_api_key
 VITE_FIREBASE_KEY=your_firebase_api_key
+
 Replace your_qwen_api_key, your_tmdb_api_key, and your_firebase_api_key with your actual API keys.
 
-Configure Firebase:
+### Configure Firebase:
 Create a src/utils/firebase.js file and add your Firebase configuration:
 
-js
-Copy
-Edit
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
@@ -138,52 +132,46 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export default app;
-Replace your-project-id, your-messaging-sender-id, and your-app-id with your actual Firebase configuration values.
 
-Start the Development Server:
+- Replace your-project-id, your-messaging-sender-id, and your-app-id with your actual Firebase configuration values.
+
+### Start the Development Server:
 Using npm:
 
-bash
-Copy
-Edit
 npm run dev
+
 Or using yarn:
 
-bash
-Copy
-Edit
 yarn dev
-The application will be running at http://localhost:3000 by default.
 
-Building for Production
+- The application will be running at http://localhost:3000 by default.
+
+### Building for Production
+
 To create a production build:
 
 Using npm:
 
-bash
-Copy
-Edit
-npm run build
-Or using yarn:
 
-bash
-Copy
-Edit
+npm run build
+
+Or
+
+using yarn:
+
+
 yarn build
 The optimized files will be in the dist directory.
 
-Deployment
+###Deployment
+
 GPTFLIX can be deployed using various platforms that support static sites, such as Vercel, Netlify, or Firebase Hosting. Ensure that your environment variables are correctly set up in your deployment platform.
 
-Acknowledgments
-React
+### Acknowledgments
 
-Tailwind CSS
-
-The Movie Database (TMDB) API
-
-OpenRouter API
-
-Qwen API
-
-Firebase
+- React
+- Tailwind CSS
+- The Movie Database (TMDB) API
+- OpenRouter API
+- Qwen API
+- Firebase

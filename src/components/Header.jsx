@@ -149,14 +149,14 @@ const Header = () => {
                 />
 
                 {isDropdownOpen && (
-                  <div className="absolute top-12 right-0 bg-black/90 border border-gray-700 rounded-md py-2 min-w-[180px] sm:min-w-[200px] md:min-w-[220px] max-w-[80vw] z-50">
+                  <div className="absolute top-12 right-0 bg-black/90 border border-gray-700 rounded-md py-2 min-w-[180px] sm:min-w-[200px] md:min-w-[200px] max-w-[80vw] z-50">
                     <div className="px-4 py-2 border-b border-gray-700">
                       <p className="text-white text-sm font-medium truncate">{user?.displayName}</p>
                       <p className="text-gray-400 text-xs truncate">{user?.email}</p>
                     </div>
                     <button
                       onClick={handleSignOut}
-                      className="w-full px-4 py-3 m-1 cursor-pointer text-white text-center text-sm bg-red-800 hover:bg-red-500 rounded"
+                      className="w-full px-3 py-2 sm:px-3 sm:py-2 text-white text-center text-sm bg-red-800 hover:bg-red-500 rounded transition-all"
                     >
                       Sign out
                     </button>
